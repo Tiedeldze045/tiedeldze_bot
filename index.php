@@ -4,14 +4,20 @@ ignore_user_abort(true);
 set_time_limit(0);
 flush();
 
-// Hardcoded token for now
+// Hardcoded token
 $token = "8053381152:AAF29eX69ZIoAURqcviADw2a1HQdYZlDo_A";
 
-// Log incoming update
-file_put_contents("log.txt", file_get_contents("php://input") . PHP_EOL, FILE_APPEND);
+// Log full update
+$raw = file_get_contents("php://input");
+file_put_contents("log.txt", $raw . PHP_EOL, FILE_APPEND);
 
 // Decode update
-$update = json_decode(file_get_contents("php://input"), true);
+$update = json_decode($raw, true);
+
+// Log decoded structure
+file_put_contents("error_log.txt", print_r($update, true) . PHP_EOL, FILE_APPEND);
+
+// Extract chat_id and message
 $chat_id = $update["message"]["chat"]["id"] ?? null;
 $message = $update["message"]["text"] ?? "";
 
@@ -23,4 +29,6 @@ if ($chat_id && $message === "/start") {
 
 exit;
 ?>
+
+
 
